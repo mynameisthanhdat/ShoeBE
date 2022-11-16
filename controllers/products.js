@@ -50,10 +50,52 @@ const createProduct = async (req, res, next) => {
 
 const getAllProducts = async (req, res, next) => {
   try {
-    const allProducts = await Products.find()
+    const {
+      pageSize = 12,
+      pageNumber = 1,
+      productName = '',
+      productBrand = '',
+      orderByColumn,
+      orderByDirection = 'desc',
+    } = req.query
+    const filter = {
+      $and: [
+        {
+          productName: {
+            $regex: productName,
+            $options: '$i',
+          },
+        },
+        {
+          productBrand: {
+            $regex: productBrand,
+            $options: '$i',
+          },
+        },
+      ],
+    }
+    const filterProducts = await Products.find(filter)
+      .sort(`${orderByDirection === 'asc' ? '' : '-'}${orderByColumn}`)
+      .limit(pageSize * 1)
+      .skip((pageNumber - 1) * pageSize)
+
+    const allProducts = await Products.find(filter)
+
+    let totalPage = 0
+    if (allProducts.length % pageSize === 0) {
+      totalPage = allProducts.length / pageSize
+    } else {
+      totalPage = parseInt(allProducts.length / pageSize) + 1
+    }
+
     if (allProducts.length > 0) {
       res.status(200).json({
-        products: allProducts.reverse(),
+        totalPage: totalPage,
+        totalProducts: allProducts.length,
+        products:
+          orderByDirection && orderByColumn
+            ? filterProducts
+            : filterProducts.reverse(),
       })
     } else {
       res.status(200).json({
