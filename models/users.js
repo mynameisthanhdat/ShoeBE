@@ -20,7 +20,7 @@ const usersSchema = new Schema(
       require: true,
     },
     phone: {
-      type: Number,
+      type: String,
       require: true,
     },
     email: {
@@ -34,6 +34,10 @@ const usersSchema = new Schema(
     avatar: {
       type: String,
       require: false,
+    },
+    isAdmin: {
+      type: Boolean,
+      require: true,
     },
   },
   { timestamps: true },

@@ -24,9 +24,12 @@ const addUserSchema = Joi.object({
   firstName: Joi.string().min(2).max(100).required(),
   lastName: Joi.string().min(2).max(100).required(),
   phone: Joi.number().required(),
-  email: Joi.string().email({ tlds: { allow: false } }),
-  address: Joi.string().min(10).max(200).required(),
-  avatar: Joi.string(),
+  email: Joi.string()
+    .email({ tlds: { allow: false } })
+    .allow(''),
+  address: Joi.string().min(10).max(200).allow(''),
+  avatar: Joi.string().allow(''),
+  isAdmin: Joi.boolean().required(),
 })
 
 module.exports = {
