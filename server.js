@@ -4,6 +4,8 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const ProductsRoute = require('./routes/products')
 const UsersRoute = require('./routes/users')
+const OrderRoute = require('./routes/orders')
+const CartRoute = require('./routes/carts')
 
 const test = process.env.TEST
 
@@ -24,7 +26,6 @@ const PORT = process.env.PORT
 
 app.listen(PORT || 3000, () => {
   console.log(`Server is running on port ${PORT}`)
-  console.log('test: ', test)
 })
 
 database.on('error', (error) => {
@@ -40,3 +41,5 @@ app.use(bodyParser.json())
 
 app.use('', ProductsRoute)
 app.use('', UsersRoute)
+app.use('', OrderRoute)
+app.use('', CartRoute)
